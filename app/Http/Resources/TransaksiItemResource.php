@@ -16,13 +16,14 @@ class TransaksiItemResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'transaksi_id' => $this->transaksi_id,
-            'produk_id' => $this->produk_id,
-            'jumlah_item' => $this->jumlah_item,
-            'harga_peritem' => $this->harga_peritem,
+            'transaction_id' => $this->transaction_id,
+            'product_id' => $this->product_id,
+            'quantity' => $this->quantity,
+            'price' => $this->price,
             'subtotal' => $this->subtotal,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'product' => $this->whenLoaded('produk'),
         ];
     }
 }

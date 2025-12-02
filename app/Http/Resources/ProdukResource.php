@@ -16,13 +16,13 @@ class ProdukResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'nama' => $this->nama,
-            'harga' => $this->harga,
-            'stok' => $this->stok,
-            'kategori_id' => $this->kategori_id,
-            'image' => $this->image,
+            'name' => $this->name,
+            'price' => $this->price,
+            'stock' => $this->stock,
+            'category_id' => $this->category_id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'category' => $this->whenLoaded('kategori'),
         ];
     }
 }

@@ -22,13 +22,12 @@ class TransaksiRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|integer',
-            'opsi_pay' => 'required|string|max:100',
+            'customer_id' => 'required|exists:customers,id',
             'items' => 'required|array',
-            'items.*.produk_id' => 'required|exists:produk,id',
-            'items.*.jumlah_item' => 'required|integer',
-            'items.*.harga_peritem' => 'required|integer',
-            'items.*.subtotal' => 'required|integer',
+            'items.*.product_id' => 'required|exists:products,id',
+            'items.*.quantity' => 'required|integer|min:1',
+            'items.*.price' => 'required|numeric|min:0',
+            'items.*.subtotal' => 'required|numeric|min:0',
         ];
     }
 }

@@ -9,23 +9,23 @@ class TransaksiItem extends Model
 {
     use HasFactory;
 
-    protected $table = 'transaksi_item';
+    protected $table = 'transaction_items';
 
     protected $fillable = [
-        'transaksi_id',
-        'produk_id',
-        'jumlah_item',
-        'harga_peritem',
+        'transaction_id',
+        'product_id',
+        'quantity',
+        'price',
         'subtotal',
     ];
 
     public function transaksi()
     {
-        return $this->belongsTo(TransaksiKasir::class, 'transaksi_id');
+        return $this->belongsTo(TransaksiKasir::class, 'transaction_id');
     }
 
     public function produk()
     {
-        return $this->belongsTo(Produk::class, 'produk_id');
+        return $this->belongsTo(Produk::class, 'product_id');
     }
 }

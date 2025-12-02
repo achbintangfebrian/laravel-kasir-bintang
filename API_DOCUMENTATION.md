@@ -1,6 +1,7 @@
-# Smart Cashier (Kasir Cerdas) API Documentation
+# Smart Cashier API Documentation
 
-This document provides an overview of the Laravel backend API for the Smart Cashier application with AI Product Recommendations.
+## Overview
+This documentation covers the RESTful API for the Smart Cashier application with AI-powered product recommendations. The API provides endpoints for managing products, categories, customers, and transactions.
 
 ## Base URL
 ```
@@ -8,269 +9,628 @@ http://localhost:8000/api/v1
 ```
 
 ## Authentication
+Currently, the API does not require authentication for any endpoints.
 
-### Register
-```
-POST /auth/register
-```
-
-**Request Body:**
+## Response Format
+All API responses follow this standard format:
 ```json
 {
-  "role": 1,
-  "email": "admin@example.com",
-  "password": "password123"
+  "success": true/false,
+  "message": "Description of the operation result",
+  "data": {} // or []
 }
 ```
 
-### Login
-```
-POST /auth/login
-```
-
-**Request Body:**
-```json
-{
-  "email": "admin@example.com",
-  "password": "password123"
-}
-```
-
-## Products
-
-### Get All Products
-```
-GET /products
-```
-
-### Get Product by ID
-```
-GET /products/{id}
-```
-
-### Create Product
-```
-POST /products
-```
-
-**Request Body:**
-```json
-{
-  "nama": "Product Name",
-  "harga": 10000,
-  "stok": 50,
-  "kategori_id": 1,
-  "image": "product_image.jpg"
-}
-```
-
-### Update Product
-```
-PUT /products/{id}
-```
-
-**Request Body:**
-```json
-{
-  "nama": "Updated Product Name",
-  "harga": 15000,
-  "stok": 30,
-  "kategori_id": 1,
-  "image": "updated_product_image.jpg"
-}
-```
-
-### Delete Product
-```
-DELETE /products/{id}
-```
+---
 
 ## Categories
 
 ### Get All Categories
-```
-GET /categories
-```
+**GET** `/categories`
 
-### Get Category by ID
-```
-GET /categories/{id}
-```
+Retrieves all product categories.
 
-### Create Category
-```
-POST /categories
-```
-
-**Request Body:**
+**Response:**
 ```json
 {
-  "name": "Category Name"
-}
-```
-
-### Update Category
-```
-PUT /categories/{id}
-```
-
-**Request Body:**
-```json
-{
-  "name": "Updated Category Name"
-}
-```
-
-### Delete Category
-```
-DELETE /categories/{id}
-```
-
-## Transactions
-
-### Get All Transactions
-```
-GET /transactions
-```
-
-### Get Transaction by ID
-```
-GET /transactions/{id}
-```
-
-### Create Transaction
-```
-POST /transactions
-```
-
-**Request Body:**
-```json
-{
-  "user_id": 1,
-  "opsi_pay": "Cash",
-  "items": [
+  "success": true,
+  "message": "Categories retrieved successfully",
+  "data": [
     {
-      "produk_id": 1,
-      "jumlah_item": 2,
-      "harga_peritem": 10000,
-      "subtotal": 20000
+      "id": 1,
+      "name": "Electronics",
+      "created_at": "2025-12-02T03:43:04.000000Z",
+      "updated_at": "2025-12-02T03:43:04.000000Z"
     }
   ]
 }
 ```
 
-### Delete Transaction
-```
-DELETE /transactions/{id}
-```
+### Create Category
+**POST** `/categories`
 
-## AI Recommendations
-
-### Get Recommendations
-```
-GET /recommendations
-```
-
-**Query Parameters:**
-- `user_id` (optional): Get personalized recommendations for a specific user
-
-### Log Recommendation
-```
-POST /recommendations
-```
+Creates a new product category.
 
 **Request Body:**
 ```json
 {
-  "user_id": 1,
-  "produk_id": 1,
-  "action": 1,
-  "bbot_rekom": 1
+  "name": "Books"
 }
 ```
 
-## Database Schema
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Category created successfully",
+  "data": {
+    "id": 2,
+    "name": "Books",
+    "created_at": "2025-12-02T04:15:22.000000Z",
+    "updated_at": "2025-12-02T04:15:22.000000Z"
+  }
+}
+```
 
-The application uses the following database tables:
+### Get Category
+**GET** `/categories/{id}`
 
-1. `admin` - Store administrator accounts
-2. `kategori_produk` - Product categories
-3. `produk` - Product information
-4. `rekom_ai` - AI recommendation logs
-5. `transaksi_kasir` - Cashier transactions
-6. `transaksi_item` - Items in transactions
+Retrieves a specific category by ID.
 
-## Models
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Category retrieved successfully",
+  "data": {
+    "id": 1,
+    "name": "Electronics",
+    "created_at": "2025-12-02T03:43:04.000000Z",
+    "updated_at": "2025-12-02T03:43:04.000000Z"
+  }
+}
+```
 
-The application includes the following Eloquent models:
+### Update Category
+**PUT** `/categories/{id}`
 
-1. `Admin` - Administrator accounts
-2. `KategoriProduk` - Product categories
-3. `Produk` - Products
-4. `RekomAi` - AI recommendation logs
-5. `TransaksiKasir` - Cashier transactions
-6. `TransaksiItem` - Transaction items
+Updates an existing category.
 
-## Controllers
+**Request Body:**
+```json
+{
+  "name": "Home & Garden"
+}
+```
 
-The application includes the following API controllers:
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Category updated successfully",
+  "data": {
+    "id": 1,
+    "name": "Home & Garden",
+    "created_at": "2025-12-02T03:43:04.000000Z",
+    "updated_at": "2025-12-02T04:20:10.000000Z"
+  }
+}
+```
 
-1. `AuthController` - Handle authentication
-2. `ProdukController` - Manage products
-3. `KategoriProdukController` - Manage categories
-4. `TransaksiController` - Manage transactions
-5. `RekomendasiController` - Handle AI recommendations
+### Delete Category
+**DELETE** `/categories/{id}`
 
-## Resources
+Deletes a category.
 
-The application includes the following API resources for data transformation:
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Category deleted successfully"
+}
+```
 
-1. `AdminResource` - Transform Admin model data
-2. `KategoriProdukResource` - Transform KategoriProduk model data
-3. `ProdukResource` - Transform Produk model data
-4. `TransaksiItemResource` - Transform TransaksiItem model data
-5. `TransaksiKasirResource` - Transform TransaksiKasir model data
+---
 
-## Features Implemented
+## Products
 
-1. **Point of Sale System**
-   - Add products to cart
-   - Edit purchase quantities
-   - Automatic total calculation
-   - Print/save receipt as PDF
-   - Transaction history
+### Get All Products
+**GET** `/products`
 
-2. **Product Management**
-   - Add new products
-   - Edit products
-   - Delete products
-   - Upload product images
-   - Product categories
-   - Automatic stock reduction after transactions
+Retrieves all products with their categories.
 
-3. **AI Product Recommendations**
-   - Recommendations based on user purchase history
-   - Content-based recommendations (similar categories)
-   - Frequency-based recommendations (most sold products)
-   - Recommendations appear when opening app, adding first product, and after transactions
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Products retrieved successfully",
+  "data": [
+    {
+      "id": 1,
+      "name": "Smartphone XYZ",
+      "price": 5000000,
+      "stock": 25,
+      "category_id": 1,
+      "created_at": "2025-12-02T03:45:30.000000Z",
+      "updated_at": "2025-12-02T03:45:30.000000Z",
+      "category": {
+        "id": 1,
+        "name": "Electronics",
+        "created_at": "2025-12-02T03:43:04.000000Z",
+        "updated_at": "2025-12-02T03:43:04.000000Z"
+      }
+    }
+  ]
+}
+```
 
-4. **User Login & Management**
-   - Admin/cashier login
-   - Role-based access (Admin/Staff)
+### Create Product
+**POST** `/products`
 
-5. **Sales Dashboard**
-   - Daily/weekly/monthly statistics
-   - Sales charts
-   - Most purchased products
-   - Total revenue
+Creates a new product.
 
-6. **Stock Management**
-   - Stock increases when restocking
-   - Stock decreases during transactions
-   - Low stock notifications
-   - Daily stock reports
+**Request Body:**
+```json
+{
+  "name": "Laptop ABC",
+  "price": 12000000,
+  "stock": 10,
+  "category_id": 1
+}
+```
 
-7. **Product Categories**
-   - Create new categories
-   - Assign categories to products
-   - Filter products by category
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Product created successfully",
+  "data": {
+    "id": 2,
+    "name": "Laptop ABC",
+    "price": 12000000,
+    "stock": 10,
+    "category_id": 1,
+    "created_at": "2025-12-02T04:30:15.000000Z",
+    "updated_at": "2025-12-02T04:30:15.000000Z",
+    "category": {
+      "id": 1,
+      "name": "Electronics",
+      "created_at": "2025-12-02T03:43:04.000000Z",
+      "updated_at": "2025-12-02T03:43:04.000000Z"
+    }
+  }
+}
+```
+
+### Get Product
+**GET** `/products/{id}`
+
+Retrieves a specific product by ID.
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Product retrieved successfully",
+  "data": {
+    "id": 1,
+    "name": "Smartphone XYZ",
+    "price": 5000000,
+    "stock": 25,
+    "category_id": 1,
+    "created_at": "2025-12-02T03:45:30.000000Z",
+    "updated_at": "2025-12-02T03:45:30.000000Z",
+    "category": {
+      "id": 1,
+      "name": "Electronics",
+      "created_at": "2025-12-02T03:43:04.000000Z",
+      "updated_at": "2025-12-02T03:43:04.000000Z"
+    }
+  }
+}
+```
+
+### Update Product
+**PUT** `/products/{id}`
+
+Updates an existing product.
+
+**Request Body:**
+```json
+{
+  "name": "Smartphone XYZ Pro",
+  "price": 5500000,
+  "stock": 20,
+  "category_id": 1
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Product updated successfully",
+  "data": {
+    "id": 1,
+    "name": "Smartphone XYZ Pro",
+    "price": 5500000,
+    "stock": 20,
+    "category_id": 1,
+    "created_at": "2025-12-02T03:45:30.000000Z",
+    "updated_at": "2025-12-02T04:35:45.000000Z",
+    "category": {
+      "id": 1,
+      "name": "Electronics",
+      "created_at": "2025-12-02T03:43:04.000000Z",
+      "updated_at": "2025-12-02T03:43:04.000000Z"
+    }
+  }
+}
+```
+
+### Delete Product
+**DELETE** `/products/{id}`
+
+Deletes a product.
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Product deleted successfully"
+}
+```
+
+---
+
+## Customers
+
+### Get All Customers
+**GET** `/customers`
+
+Retrieves all customers.
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Customers retrieved successfully",
+  "data": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "phone": "081234567890",
+      "created_at": "2025-12-02T03:50:20.000000Z",
+      "updated_at": "2025-12-02T03:50:20.000000Z"
+    }
+  ]
+}
+```
+
+### Create Customer
+**POST** `/customers`
+
+Creates a new customer.
+
+**Request Body:**
+```json
+{
+  "name": "Jane Smith",
+  "phone": "082345678901"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Customer created successfully",
+  "data": {
+    "id": 2,
+    "name": "Jane Smith",
+    "phone": "082345678901",
+    "created_at": "2025-12-02T04:40:30.000000Z",
+    "updated_at": "2025-12-02T04:40:30.000000Z"
+  }
+}
+```
+
+### Get Customer
+**GET** `/customers/{id}`
+
+Retrieves a specific customer by ID.
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Customer retrieved successfully",
+  "data": {
+    "id": 1,
+    "name": "John Doe",
+    "phone": "081234567890",
+    "created_at": "2025-12-02T03:50:20.000000Z",
+    "updated_at": "2025-12-02T03:50:20.000000Z"
+  }
+}
+```
+
+### Update Customer
+**PUT** `/customers/{id}`
+
+Updates an existing customer.
+
+**Request Body:**
+```json
+{
+  "name": "John Doe Jr.",
+  "phone": "081234567890"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Customer updated successfully",
+  "data": {
+    "id": 1,
+    "name": "John Doe Jr.",
+    "phone": "081234567890",
+    "created_at": "2025-12-02T03:50:20.000000Z",
+    "updated_at": "2025-12-02T04:45:10.000000Z"
+  }
+}
+```
+
+### Delete Customer
+**DELETE** `/customers/{id}`
+
+Deletes a customer.
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Customer deleted successfully"
+}
+```
+
+---
+
+## Transactions
+
+### Get All Transactions
+**GET** `/transactions`
+
+Retrieves all transactions with customer and item details.
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Transactions retrieved successfully",
+  "data": [
+    {
+      "id": 1,
+      "customer_id": 1,
+      "total": 5000000,
+      "created_at": "2025-12-02T04:00:15.000000Z",
+      "updated_at": "2025-12-02T04:00:15.000000Z",
+      "customer": {
+        "id": 1,
+        "name": "John Doe",
+        "phone": "081234567890",
+        "created_at": "2025-12-02T03:50:20.000000Z",
+        "updated_at": "2025-12-02T03:50:20.000000Z"
+      },
+      "items": [
+        {
+          "id": 1,
+          "transaction_id": 1,
+          "product_id": 1,
+          "quantity": 1,
+          "price": 5000000,
+          "subtotal": 5000000,
+          "created_at": "2025-12-02T04:00:15.000000Z",
+          "updated_at": "2025-12-02T04:00:15.000000Z",
+          "product": {
+            "id": 1,
+            "name": "Smartphone XYZ",
+            "price": 5000000,
+            "stock": 24,
+            "category_id": 1,
+            "created_at": "2025-12-02T03:45:30.000000Z",
+            "updated_at": "2025-12-02T04:00:15.000000Z"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+### Create Transaction
+**POST** `/transactions`
+
+Creates a new transaction with items.
+
+**Request Body:**
+```json
+{
+  "customer_id": 1,
+  "items": [
+    {
+      "product_id": 1,
+      "quantity": 2,
+      "price": 5000000,
+      "subtotal": 10000000
+    }
+  ]
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Transaction created successfully",
+  "data": {
+    "id": 2,
+    "customer_id": 1,
+    "total": 10000000,
+    "created_at": "2025-12-02T04:50:20.000000Z",
+    "updated_at": "2025-12-02T04:50:20.000000Z",
+    "customer": {
+      "id": 1,
+      "name": "John Doe",
+      "phone": "081234567890",
+      "created_at": "2025-12-02T03:50:20.000000Z",
+      "updated_at": "2025-12-02T03:50:20.000000Z"
+    },
+    "items": [
+      {
+        "id": 2,
+        "transaction_id": 2,
+        "product_id": 1,
+        "quantity": 2,
+        "price": 5000000,
+        "subtotal": 10000000,
+        "created_at": "2025-12-02T04:50:20.000000Z",
+        "updated_at": "2025-12-02T04:50:20.000000Z",
+        "product": {
+          "id": 1,
+          "name": "Smartphone XYZ",
+          "price": 5000000,
+          "stock": 22,
+          "category_id": 1,
+          "created_at": "2025-12-02T03:45:30.000000Z",
+          "updated_at": "2025-12-02T04:50:20.000000Z"
+        }
+      }
+    ]
+  }
+}
+```
+
+### Get Transaction
+**GET** `/transactions/{id}`
+
+Retrieves a specific transaction by ID.
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Transaction retrieved successfully",
+  "data": {
+    "id": 1,
+    "customer_id": 1,
+    "total": 5000000,
+    "created_at": "2025-12-02T04:00:15.000000Z",
+    "updated_at": "2025-12-02T04:00:15.000000Z",
+    "customer": {
+      "id": 1,
+      "name": "John Doe",
+      "phone": "081234567890",
+      "created_at": "2025-12-02T03:50:20.000000Z",
+      "updated_at": "2025-12-02T03:50:20.000000Z"
+    },
+    "items": [
+      {
+        "id": 1,
+        "transaction_id": 1,
+        "product_id": 1,
+        "quantity": 1,
+        "price": 5000000,
+        "subtotal": 5000000,
+        "created_at": "2025-12-02T04:00:15.000000Z",
+        "updated_at": "2025-12-02T04:00:15.000000Z",
+        "product": {
+          "id": 1,
+          "name": "Smartphone XYZ",
+          "price": 5000000,
+          "stock": 24,
+          "category_id": 1,
+          "created_at": "2025-12-02T03:45:30.000000Z",
+          "updated_at": "2025-12-02T04:00:15.000000Z"
+        }
+      }
+    ]
+  }
+}
+```
+
+### Delete Transaction
+**DELETE** `/transactions/{id}`
+
+Deletes a transaction and its items.
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Transaction deleted successfully"
+}
+```
+
+---
+
+## Recommendations
+
+### Get Product Recommendations
+**GET** `/recommendations`
+
+Retrieves the top 3 best-selling products as recommendations.
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Recommendations retrieved successfully",
+  "data": [
+    {
+      "id": 1,
+      "name": "Smartphone XYZ",
+      "price": 5000000,
+      "stock": 24,
+      "category_id": 1,
+      "created_at": "2025-12-02T03:45:30.000000Z",
+      "updated_at": "2025-12-02T04:00:15.000000Z"
+    }
+  ]
+}
+```
+
+---
+
+## Error Responses
+
+All error responses follow this format:
+```json
+{
+  "success": false,
+  "message": "Error description"
+}
+```
+
+Common HTTP status codes:
+- **404 Not Found** - Resource doesn't exist
+- **422 Unprocessable Entity** - Validation errors
+- **500 Internal Server Error** - Server errors
+
+Example validation error:
+```json
+{
+  "success": false,
+  "message": "The name field is required."
+}
+```
+
+Example not found error:
+```json
+{
+  "success": false,
+  "message": "Product not found"
+}
+```

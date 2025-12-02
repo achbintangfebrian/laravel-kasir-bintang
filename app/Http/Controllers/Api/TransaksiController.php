@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\TransaksiKasir;
 use App\Models\TransaksiItem;
 use App\Models\Produk;
+use App\Models\ProductSale;
 use App\Http\Resources\TransaksiKasirResource;
 use App\Http\Requests\TransaksiRequest;
 use Illuminate\Http\Request;
@@ -14,7 +15,7 @@ class TransaksiController extends Controller
 {
     public function index()
     {
-        $transaksis = TransaksiKasir::with('transaksiItems.produk')->get();
+        $transaksis = TransaksiKasir::with('transaksiItems.produk', 'customer')->get();
         return response()->json([
             'success' => true,
             'message' => 'Transactions retrieved successfully',
@@ -24,36 +25,51 @@ class TransaksiController extends Controller
 
     public function store(TransaksiRequest $request)
     {
+        // Validate customer exists
+        $customer = \App\Models\Customer::find($request->customer_id);
+        if (!$customer) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Customer not found',
+            ], 404);
+        }
+
         // Calculate total from items
         $total = collect($request->items)->sum('subtotal');
 
         // Create transaction
         $transaksi = TransaksiKasir::create([
-            'user_id' => $request->user_id,
-            'opsi_pay' => $request->opsi_pay,
+            'customer_id' => $request->customer_id,
             'total' => $total,
         ]);
 
         // Create transaction items
         foreach ($request->items as $item) {
             TransaksiItem::create([
-                'transaksi_id' => $transaksi->id,
-                'produk_id' => $item['produk_id'],
-                'jumlah_item' => $item['jumlah_item'],
-                'harga_peritem' => $item['harga_peritem'],
+                'transaction_id' => $transaksi->id,
+                'product_id' => $item['product_id'],
+                'quantity' => $item['quantity'],
+                'price' => $item['price'],
                 'subtotal' => $item['subtotal'],
             ]);
 
             // Update product stock
-            $produk = Produk::find($item['produk_id']);
+            $produk = Produk::find($item['product_id']);
             if ($produk) {
-                $produk->stok -= $item['jumlah_item'];
+                $produk->stock -= $item['quantity'];
                 $produk->save();
             }
+
+            // Update product sales count
+            $productSale = ProductSale::firstOrCreate(
+                ['product_id' => $item['product_id']],
+                ['total_sold' => 0]
+            );
+            $productSale->increment('total_sold', $item['quantity']);
         }
 
         // Load the relationship for the response
-        $transaksi->load('transaksiItems.produk');
+        $transaksi->load('transaksiItems.produk', 'customer');
 
         return response()->json([
             'success' => true,
@@ -64,7 +80,7 @@ class TransaksiController extends Controller
 
     public function show($id)
     {
-        $transaksi = TransaksiKasir::with('transaksiItems.produk')->find($id);
+        $transaksi = TransaksiKasir::with('transaksiItems.produk', 'customer')->find($id);
 
         if (!$transaksi) {
             return response()->json([

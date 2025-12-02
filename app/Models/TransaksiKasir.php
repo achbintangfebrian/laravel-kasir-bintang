@@ -9,16 +9,20 @@ class TransaksiKasir extends Model
 {
     use HasFactory;
 
-    protected $table = 'transaksi_kasir';
+    protected $table = 'transactions';
 
     protected $fillable = [
-        'user_id',
+        'customer_id',
         'total',
-        'opsi_pay',
     ];
 
     public function transaksiItems()
     {
-        return $this->hasMany(TransaksiItem::class, 'transaksi_id');
+        return $this->hasMany(TransaksiItem::class, 'transaction_id');
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class, 'customer_id');
     }
 }

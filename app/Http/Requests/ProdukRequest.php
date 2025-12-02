@@ -22,21 +22,19 @@ class ProdukRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'nama' => 'required|string|max:100',
-            'harga' => 'required|integer',
-            'stok' => 'required|integer',
-            'kategori_id' => 'required|exists:kategori_produk,id',
-            'image' => 'required|string|max:100',
+            'name' => 'required|string|max:150',
+            'price' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+            'category_id' => 'required|exists:categories,id',
         ];
 
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
             // For update requests, make fields optional
             $rules = [
-                'nama' => 'sometimes|required|string|max:100',
-                'harga' => 'sometimes|required|integer',
-                'stok' => 'sometimes|required|integer',
-                'kategori_id' => 'sometimes|required|exists:kategori_produk,id',
-                'image' => 'sometimes|required|string|max:100',
+                'name' => 'sometimes|required|string|max:150',
+                'price' => 'sometimes|required|numeric|min:0',
+                'stock' => 'sometimes|required|integer|min:0',
+                'category_id' => 'sometimes|required|exists:categories,id',
             ];
         }
 

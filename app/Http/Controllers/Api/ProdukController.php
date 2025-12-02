@@ -12,7 +12,7 @@ class ProdukController extends Controller
 {
     public function index()
     {
-        $produks = Produk::all();
+        $produks = Produk::with('kategori')->get();
         return response()->json([
             'success' => true,
             'message' => 'Products retrieved successfully',
@@ -22,7 +22,19 @@ class ProdukController extends Controller
 
     public function store(ProdukRequest $request)
     {
+        // Validate category exists
+        $kategori = \App\Models\KategoriProduk::find($request->category_id);
+        if (!$kategori) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Category not found',
+            ], 404);
+        }
+
         $produk = Produk::create($request->all());
+
+        // Load the relationship for the response
+        $produk->load('kategori');
 
         return response()->json([
             'success' => true,
@@ -33,7 +45,7 @@ class ProdukController extends Controller
 
     public function show($id)
     {
-        $produk = Produk::find($id);
+        $produk = Produk::with('kategori')->find($id);
 
         if (!$produk) {
             return response()->json([
@@ -60,7 +72,21 @@ class ProdukController extends Controller
             ], 404);
         }
 
+        // Validate category exists if provided
+        if ($request->has('category_id')) {
+            $kategori = \App\Models\KategoriProduk::find($request->category_id);
+            if (!$kategori) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Category not found',
+                ], 404);
+            }
+        }
+
         $produk->update($request->all());
+
+        // Load the relationship for the response
+        $produk->load('kategori');
 
         return response()->json([
             'success' => true,
