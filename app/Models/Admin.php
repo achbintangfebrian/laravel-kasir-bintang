@@ -15,9 +15,11 @@ class Admin extends Model
         'role',
         'email',
         'password',
+        'api_token',
     ];
 
     protected $hidden = [
         'password',
+        'api_token',
     ];
 }

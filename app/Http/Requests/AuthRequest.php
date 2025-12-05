@@ -27,9 +27,9 @@ class AuthRequest extends FormRequest
         ];
 
         // For registration, add role validation
-        if ($this->is('api/auth/register')) {
+        if ($this->is('api/v1/auth/register') || $this->is('*/auth/register')) {
             $rules['role'] = 'required|integer';
-            $rules['email'] = 'required|email|unique:admin';
+            $rules['email'] = 'required|email|unique:admin,email';
             $rules['password'] = 'required|min:6';
         }
 

@@ -1,7 +1,7 @@
 # Smart Cashier API Documentation
 
 ## Overview
-This documentation covers the RESTful API for the Smart Cashier application with AI-powered product recommendations. The API provides endpoints for managing products, categories, customers, and transactions.
+This documentation covers the RESTful API for the Smart Cashier application with AI-powered product recommendations. The API provides endpoints for managing products, categories, customers, and transactions, along with authentication.
 
 ## Base URL
 ```
@@ -9,7 +9,11 @@ http://localhost:8000/api/v1
 ```
 
 ## Authentication
-Currently, the API does not require authentication for any endpoints.
+All endpoints except `/auth/register` and `/auth/login` require authentication using an API token. Include the token in the Authorization header:
+
+```
+Authorization: YOUR_API_TOKEN_HERE
+```
 
 ## Response Format
 All API responses follow this standard format:
@@ -23,12 +27,94 @@ All API responses follow this standard format:
 
 ---
 
+## Authentication
+
+### Register
+**POST** `/auth/register`
+
+Registers a new admin user.
+
+**Request Body:**
+```json
+{
+  "role": 1,
+  "email": "admin@example.com",
+  "password": "your_password"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Admin registered successfully",
+  "data": {
+    "id": 1,
+    "role": 1,
+    "email": "admin@example.com",
+    "api_token": "Nt1DqG6JLLZrq0xxHVt4doaKiAQ1zHWGBHubhp2A5Musq4gIG0HtciCTeeabt"
+  }
+}
+```
+
+### Login
+**POST** `/auth/login`
+
+Logs in an existing admin user.
+
+**Request Body:**
+```json
+{
+  "email": "admin@example.com",
+  "password": "your_password"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Login successful",
+  "data": {
+    "id": 1,
+    "role": 1,
+    "email": "admin@example.com",
+    "api_token": "Nt1DqG6JLLZrq0xxHVt4doaKiAQ1zHWGBHubhp2A5Musq4gIG0HtciCTeeabt"
+  }
+}
+```
+
+### Logout
+**POST** `/auth/logout`
+
+Logs out the current admin user (invalidates the API token).
+
+**Headers:**
+```
+Authorization: YOUR_API_TOKEN_HERE
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Logout successful"
+}
+```
+
+---
+
 ## Categories
 
 ### Get All Categories
 **GET** `/categories`
 
 Retrieves all product categories.
+
+**Headers:**
+```
+Authorization: YOUR_API_TOKEN_HERE
+```
 
 **Response:**
 ```json
@@ -50,6 +136,11 @@ Retrieves all product categories.
 **POST** `/categories`
 
 Creates a new product category.
+
+**Headers:**
+```
+Authorization: YOUR_API_TOKEN_HERE
+```
 
 **Request Body:**
 ```json
@@ -77,6 +168,11 @@ Creates a new product category.
 
 Retrieves a specific category by ID.
 
+**Headers:**
+```
+Authorization: YOUR_API_TOKEN_HERE
+```
+
 **Response:**
 ```json
 {
@@ -95,6 +191,11 @@ Retrieves a specific category by ID.
 **PUT** `/categories/{id}`
 
 Updates an existing category.
+
+**Headers:**
+```
+Authorization: YOUR_API_TOKEN_HERE
+```
 
 **Request Body:**
 ```json
@@ -122,6 +223,11 @@ Updates an existing category.
 
 Deletes a category.
 
+**Headers:**
+```
+Authorization: YOUR_API_TOKEN_HERE
+```
+
 **Response:**
 ```json
 {
@@ -138,6 +244,11 @@ Deletes a category.
 **GET** `/products`
 
 Retrieves all products with their categories.
+
+**Headers:**
+```
+Authorization: YOUR_API_TOKEN_HERE
+```
 
 **Response:**
 ```json
@@ -168,6 +279,11 @@ Retrieves all products with their categories.
 **POST** `/products`
 
 Creates a new product.
+
+**Headers:**
+```
+Authorization: YOUR_API_TOKEN_HERE
+```
 
 **Request Body:**
 ```json
@@ -207,6 +323,11 @@ Creates a new product.
 
 Retrieves a specific product by ID.
 
+**Headers:**
+```
+Authorization: YOUR_API_TOKEN_HERE
+```
+
 **Response:**
 ```json
 {
@@ -234,6 +355,11 @@ Retrieves a specific product by ID.
 **PUT** `/products/{id}`
 
 Updates an existing product.
+
+**Headers:**
+```
+Authorization: YOUR_API_TOKEN_HERE
+```
 
 **Request Body:**
 ```json
@@ -273,6 +399,11 @@ Updates an existing product.
 
 Deletes a product.
 
+**Headers:**
+```
+Authorization: YOUR_API_TOKEN_HERE
+```
+
 **Response:**
 ```json
 {
@@ -289,6 +420,11 @@ Deletes a product.
 **GET** `/customers`
 
 Retrieves all customers.
+
+**Headers:**
+```
+Authorization: YOUR_API_TOKEN_HERE
+```
 
 **Response:**
 ```json
@@ -311,6 +447,11 @@ Retrieves all customers.
 **POST** `/customers`
 
 Creates a new customer.
+
+**Headers:**
+```
+Authorization: YOUR_API_TOKEN_HERE
+```
 
 **Request Body:**
 ```json
@@ -340,6 +481,11 @@ Creates a new customer.
 
 Retrieves a specific customer by ID.
 
+**Headers:**
+```
+Authorization: YOUR_API_TOKEN_HERE
+```
+
 **Response:**
 ```json
 {
@@ -359,6 +505,11 @@ Retrieves a specific customer by ID.
 **PUT** `/customers/{id}`
 
 Updates an existing customer.
+
+**Headers:**
+```
+Authorization: YOUR_API_TOKEN_HERE
+```
 
 **Request Body:**
 ```json
@@ -388,6 +539,11 @@ Updates an existing customer.
 
 Deletes a customer.
 
+**Headers:**
+```
+Authorization: YOUR_API_TOKEN_HERE
+```
+
 **Response:**
 ```json
 {
@@ -404,6 +560,11 @@ Deletes a customer.
 **GET** `/transactions`
 
 Retrieves all transactions with customer and item details.
+
+**Headers:**
+```
+Authorization: YOUR_API_TOKEN_HERE
+```
 
 **Response:**
 ```json
@@ -454,6 +615,11 @@ Retrieves all transactions with customer and item details.
 **POST** `/transactions`
 
 Creates a new transaction with items.
+
+**Headers:**
+```
+Authorization: YOUR_API_TOKEN_HERE
+```
 
 **Request Body:**
 ```json
@@ -518,6 +684,11 @@ Creates a new transaction with items.
 
 Retrieves a specific transaction by ID.
 
+**Headers:**
+```
+Authorization: YOUR_API_TOKEN_HERE
+```
+
 **Response:**
 ```json
 {
@@ -566,6 +737,11 @@ Retrieves a specific transaction by ID.
 
 Deletes a transaction and its items.
 
+**Headers:**
+```
+Authorization: YOUR_API_TOKEN_HERE
+```
+
 **Response:**
 ```json
 {
@@ -582,6 +758,11 @@ Deletes a transaction and its items.
 **GET** `/recommendations`
 
 Retrieves the top 3 best-selling products as recommendations.
+
+**Headers:**
+```
+Authorization: YOUR_API_TOKEN_HERE
+```
 
 **Response:**
 ```json
@@ -615,6 +796,7 @@ All error responses follow this format:
 ```
 
 Common HTTP status codes:
+- **401 Unauthorized** - Missing or invalid authentication token
 - **404 Not Found** - Resource doesn't exist
 - **422 Unprocessable Entity** - Validation errors
 - **500 Internal Server Error** - Server errors
@@ -632,5 +814,13 @@ Example not found error:
 {
   "success": false,
   "message": "Product not found"
+}
+```
+
+Example authentication error:
+```json
+{
+  "success": false,
+  "message": "Unauthorized: Invalid token"
 }
 ```
